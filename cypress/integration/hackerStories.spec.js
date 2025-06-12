@@ -21,11 +21,7 @@ describe('Hacker Stories', () => {
   })
 
   context('List of stories', () => {
-    // Since the API is external,
-    // I can't control what it will provide to the frontend,
-    // and so, how can I assert on the data?
-    // This is why this test is being skipped.
-    // TODO: Find a way to test it out.
+
     it.skip('shows the right data for all rendered stories', () => { })
 
     it('shows 20 stories, then the next 20 after clicking "More"', () => {
@@ -118,7 +114,7 @@ describe('Hacker Stories', () => {
     // Esse teste é apenas para mostrar alternativas possíveis com o Cypress, uma vez que a ação aqui não 
     // pode ser realizada pelo usuário da ferramenta.
 
-    it.only('types and submits the form directly', () => {
+    it('types and submits the form directly', () => {
       cy.get('#search').type(newTerm)
       cy.get('form').submit()
 
@@ -176,7 +172,7 @@ describe('Hacker Stories', () => {
 })
 
 
-context.only('Errors', () => {
+context('Errors', () => {
   it('shows "Something went wrong ..." in case of a server error', () => {
     cy.intercept(
       'GET',
@@ -184,8 +180,11 @@ context.only('Errors', () => {
       { statusCode: 500 }
     ).as('getServerFailure')
 
-    cy.get('p:contains(Something went wrong ...').should('be.visible')
- 
+    cy.visit('/')
+    cy.wait('@getServerFailure')
+
+    cy.get('p:contains(Something went wrong ...)')
+
   })
 
   it('shows "Something went wrong ..." in case of a network error', () => {
@@ -195,8 +194,11 @@ context.only('Errors', () => {
       { forceNetworkError: true }
     ).as('getNetworkFailure')
 
-    cy.get('p:contains(Something went wrong ...').should('be.visible')
-  
+    cy.visit('/')
+    cy.wait('@getNetworkFailure')
+
+    cy.get('p:contains(Something went wrong ...)')
+
   })
 
 })
