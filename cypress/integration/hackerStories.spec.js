@@ -124,7 +124,7 @@ describe('Hacker Stories', () => {
           .clear()
       })
 
-      it.only('types and hits ENTER', () => {
+      it('types and hits ENTER', () => {
         cy.get('#search')
           .type(`${newTerm}{enter}`)
 
@@ -141,7 +141,7 @@ describe('Hacker Stories', () => {
         cy.contains('Submit')
           .click()
 
-        cy.wait('@getNewTermStories')
+        cy.wait('@getStories')
 
         cy.get('.item').should('have.length', 2)
         cy.get(`button:contains(${initialTerm})`)
@@ -157,17 +157,18 @@ describe('Hacker Stories', () => {
 
         cy.wait('@getNewTermStories')
 
-        cy.get('.item').should('have.length', 20)
+        cy.get('.item').should('have.length', 2)
       })
 
       context('Last searches', () => {
         Cypress._.times(1, () => {
-          it('shows a max of 5 buttons for the last searched terms', () => {
+          it.only('shows a max of 5 buttons for the last searched terms', () => {
             const faker = require('faker')
 
             cy.intercept(
               'GET',
-              '**/search**'
+              '**/search**',
+              { fixture: 'emptyStories'}
             ).as('getRandomStories')
 
             Cypress._.times(6, () => {

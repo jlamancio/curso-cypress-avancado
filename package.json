@@ -34,6 +34,7 @@
   "devDependencies": {
     "cypress": "^6.6.0",
     "cypress-localstorage-commands": "^1.4.1",
+    "eslint-plugin-cypress": "^5.1.0",
     "faker": "^5.4.0",
     "standardjs": "^1.0.0-alpha"
   }
