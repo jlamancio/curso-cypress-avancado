@@ -104,8 +104,10 @@ describe("Hacker Stories", () => {
         });
 
         context("Order by", () => {
-          it.only("orders by title", () => {
-            cy.get(".list-header-button:contains(Title)").as('titleHeader').click();
+          it("orders by title", () => {
+            cy.get(".list-header-button:contains(Title)")
+              .as("titleHeader")
+              .click();
             cy.get(`.item a:contains(${stories.hits[0].title})`).should(
               "have.attr",
               "href",
@@ -119,11 +121,52 @@ describe("Hacker Stories", () => {
             );
           });
 
-          it("orders by author", () => {});
+          it("orders by author", () => {
+            cy.get(".list-header-button:contains(Author)")
+              .as("authorHeader")
+              .click();
+            cy.get(".item")
+              .should("be.visible")
+              .and("contain", stories.hits[0].author);
+            cy.get(".list-header-button:contains(Author)")
+              .as("authorHeader")
+              .click();
+            cy.get(".item")
+              .should("be.visible")
+              .and("contain", stories.hits[1].author);
+          });
 
-          it("orders by comments", () => {});
+          it("orders by comments", () => {
+            cy.get(".list-header-button:contains(Comments)")
+              .as("commentsHeader")
+              .click();
 
-          it("orders by points", () => {});
+            cy.get(".item")
+              .first()
+              .should("be.visible")
+              .and("contain", stories.hits[1].num_comments);
+
+            cy.get("@commentsHeader").click();
+            cy.get(".item")
+              .should("be.visible")
+              .and("contain", stories.hits[0].num_comments);
+          });
+
+          it("orders by points", () => {
+            cy.get(".list-header-button:contains(Points)")
+              .as("pointsHeader")
+              .click();
+
+            cy.get(".item")
+              .first()
+              .should("be.visible")
+              .and("contain", stories.hits[1].points);
+
+            cy.get("@pointsHeader").click();
+            cy.get(".item")
+              .should("be.visible")
+              .and("contain", stories.hits[0].points);
+          });
         });
       });
     });
@@ -161,18 +204,6 @@ describe("Hacker Stories", () => {
 
         cy.get(".item").should("have.length", 2);
         cy.get(`button:contains(${initialTerm})`).should("be.visible");
-      });
-
-      // Esse teste é apenas para mostrar alternativas possíveis com o Cypress, uma vez que a ação aqui não
-      // pode ser realizada pelo usuário da ferramenta.
-
-      it("types and submits the form directly", () => {
-        cy.get("#search").type(newTerm);
-        cy.get("form").submit();
-
-        cy.wait("@getNewTermStories");
-
-        cy.get(".item").should("have.length", 2);
       });
 
       context("Last searches", () => {
